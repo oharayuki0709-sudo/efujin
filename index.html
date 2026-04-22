@@ -5,436 +5,437 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ευ ζην（エフジン）- Sports Tech Apps</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ===== RESET ===== */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0a0a0f;
-            color: #e0e0e8;
-            line-height: 1.7;
+            background: #000;
+            color: #f5f5f7;
+            line-height: 1.5;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         a { text-decoration: none; color: inherit; }
-        img { max-width: 100%; }
 
-        /* ===== LANGUAGE TOGGLE ===== */
+        /* ===== LANG SYSTEM ===== */
+        .ja, .en { display: none; }
+        body.lang-ja .ja { display: block; }
+        body.lang-en .en { display: block; }
+        body.lang-ja .en { display: none !important; }
+        body.lang-en .ja { display: none !important; }
+        body.lang-ja .ja-inline { display: inline !important; }
+        body.lang-en .en-inline { display: inline !important; }
+        body.lang-ja .en-inline { display: none !important; }
+        body.lang-en .ja-inline { display: none !important; }
+        body.lang-ja .ja-flex { display: flex !important; }
+        body.lang-en .en-flex { display: flex !important; }
+        body.lang-ja .en-flex { display: none !important; }
+        body.lang-en .ja-flex { display: none !important; }
+
+        /* ===== LANG TOGGLE ===== */
         .lang-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+            top: 16px;
+            right: 16px;
+            z-index: 9999;
             display: flex;
-            gap: 4px;
+            gap: 2px;
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 4px;
+            border-radius: 8px;
+            padding: 3px;
         }
         .lang-btn {
-            padding: 6px 14px;
+            padding: 5px 12px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             background: transparent;
-            color: #999;
-            font-size: 13px;
+            color: #888;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
         }
-        .lang-btn.active {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-        }
+        .lang-btn.active { background: rgba(255,255,255,0.15); color: #fff; }
 
-        /* ===== NAVIGATION ===== */
+        /* ===== NAV ===== */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 900;
-            padding: 16px 40px;
-            background: rgba(10,10,15,0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            top: 0; left: 0; right: 0;
+            z-index: 9000;
+            height: 48px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            font-size: 13px;
+            font-weight: 400;
         }
         .nav-logo {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             letter-spacing: -0.5px;
+            color: #f5f5f7;
         }
         .nav-logo span { color: #6c63ff; }
-        .nav-links { display: flex; gap: 32px; }
-        .nav-links a {
-            font-size: 14px;
-            font-weight: 500;
-            color: #888;
-            transition: color 0.3s;
-        }
-        .nav-links a:hover { color: #fff; }
+        .nav-inner a { color: #999; transition: color 0.3s; }
+        .nav-inner a:hover { color: #f5f5f7; }
 
         /* ===== HERO ===== */
-        .hero {
+        .hero-section {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 120px 24px 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -40%;
-            left: -20%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(ellipse, rgba(108,99,255,0.12) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            right: -20%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(ellipse, rgba(0,200,150,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            background: rgba(108,99,255,0.1);
-            border: 1px solid rgba(108,99,255,0.2);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #9b93ff;
-            margin-bottom: 32px;
+            padding: 140px 24px 100px;
+            background: #000;
             position: relative;
         }
-        .hero-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: #6c63ff;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+        .hero-overtitle {
+            font-size: 17px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 0.2s forwards;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .hero-title {
+            font-size: clamp(48px, 9vw, 96px);
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1.05;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s 0.4s forwards;
         }
-        .hero h1 {
-            font-size: clamp(42px, 7vw, 80px);
-            font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            position: relative;
-        }
-        .hero h1 .gradient-text {
-            background: linear-gradient(135deg, #6c63ff, #00c896, #6c63ff);
-            background-size: 200% 200%;
+        .hero-title .gradient {
+            background: linear-gradient(90deg, #6c63ff, #00c896);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientShift 5s ease infinite;
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         .hero-sub {
-            font-size: 18px;
-            color: #777;
-            max-width: 520px;
-            margin-bottom: 48px;
+            font-size: 21px;
             font-weight: 400;
+            color: #86868b;
+            max-width: 500px;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 0.6s forwards;
         }
-        .hero-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #6c63ff, #5a52d5);
-            color: #fff;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .hero-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(108,99,255,0.3);
-        }
-        .scroll-indicator {
-            position: absolute;
-            bottom: 32px;
+        .hero-links {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: #555;
-            font-size: 12px;
+            gap: 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 0.8s forwards;
         }
-        .scroll-line {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, #555, transparent);
-            animation: scrollPulse 2s infinite;
-        }
-        @keyframes scrollPulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        /* ===== SECTION COMMON ===== */
-        section { padding: 120px 24px; }
-        .section-label {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #6c63ff;
-            margin-bottom: 16px;
-        }
-        .section-title {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 20px;
-        }
-        .section-desc {
-            font-size: 16px;
-            color: #777;
-            max-width: 560px;
-            margin-bottom: 64px;
-        }
-
-        /* ===== APP CARDS ===== */
-        .apps-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .app-card {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            padding: 80px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .app-card:last-child { border-bottom: none; }
-        .app-card.reverse { direction: rtl; }
-        .app-card.reverse > * { direction: ltr; }
-        .app-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        .app-icon-wrapper {
-            position: relative;
-        }
-        .app-icon-wrapper::before {
-            content: '';
-            position: absolute;
-            inset: -30px;
-            border-radius: 50%;
-            background: var(--glow-color);
-            opacity: 0.15;
-            filter: blur(40px);
-        }
-        .app-icon {
-            width: 160px;
-            height: 160px;
-            border-radius: 36px;
-            object-fit: cover;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .app-info { padding: 20px 0; }
-        .app-tag {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-        .tag-fitness { background: rgba(255,140,50,0.15); color: #ff8c32; }
-        .tag-vbt { background: rgba(255,255,255,0.1); color: #ccc; }
-        .tag-conditioning { background: rgba(0,200,150,0.15); color: #00c896; }
-        .app-name {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-        .app-name-sub {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .app-description {
-            font-size: 15px;
-            color: #999;
-            line-height: 1.8;
-            margin-bottom: 28px;
-        }
-        .app-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 28px;
-        }
-        .feature-chip {
-            padding: 6px 14px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
-            font-size: 12px;
-            color: #aaa;
-            font-weight: 500;
-        }
-        .coming-soon-badge {
+        .hero-link {
+            font-size: 21px;
+            font-weight: 400;
+            color: #2997ff;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 10px 24px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
+            transition: gap 0.3s;
+        }
+        .hero-link:hover { gap: 10px; }
+        .hero-link .arrow { font-size: 16px; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== PRODUCT SECTION (Apple style) ===== */
+        .product-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-section.dark { background: #000; }
+        .product-section.light { background: #f5f5f7; color: #1d1d1f; }
+        .product-section.gray { background: #101010; }
+
+        .product-overtitle {
             font-size: 14px;
             font-weight: 600;
-            color: #888;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
         }
-        .coming-soon-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: #00c896;
+        .product-section.dark .product-overtitle { color: #888; }
+        .product-section.light .product-overtitle { color: #6e6e73; }
+        .product-section.gray .product-overtitle { color: #888; }
+
+        .product-title {
+            font-size: clamp(40px, 7vw, 72px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.08;
+            margin-bottom: 16px;
+        }
+        .product-section.light .product-title { color: #1d1d1f; }
+
+        .product-subtitle {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        .product-section.dark .product-subtitle { color: #86868b; }
+        .product-section.light .product-subtitle { color: #6e6e73; }
+        .product-section.gray .product-subtitle { color: #86868b; }
+
+        .product-desc {
+            font-size: 17px;
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+        .product-section.dark .product-desc { color: #86868b; }
+        .product-section.light .product-desc { color: #6e6e73; }
+        .product-section.gray .product-desc { color: #86868b; }
+
+        .product-icon {
+            width: 200px;
+            height: 200px;
+            border-radius: 44px;
+            object-fit: cover;
+            margin-bottom: 40px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+        .product-section.light .product-icon {
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+
+        .product-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 36px;
+        }
+        .feature-tag {
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .product-section.dark .feature-tag {
+            background: rgba(255,255,255,0.06);
+            color: #aaa;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .product-section.light .feature-tag {
+            background: rgba(0,0,0,0.04);
+            color: #555;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        .product-section.gray .feature-tag {
+            background: rgba(255,255,255,0.06);
+            color: #aaa;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .product-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+        }
+        .plink {
+            font-size: 17px;
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap 0.3s;
+        }
+        .plink:hover { gap: 10px; }
+        .plink .arrow { font-size: 13px; }
+        .plink-blue { color: #2997ff; }
+        .plink-green { color: #00c896; }
+        .plink-dark { color: #2997ff; }
+
+        .coming-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .product-section.dark .coming-badge {
+            background: rgba(255,255,255,0.06);
+            color: #999;
+        }
+        .product-section.light .coming-badge {
+            background: rgba(0,0,0,0.05);
+            color: #6e6e73;
+        }
+        .product-section.gray .coming-badge {
+            background: rgba(255,255,255,0.06);
+            color: #999;
+        }
+        .coming-badge .dot {
+            width: 8px; height: 8px;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
+        .dot-orange { background: #ff8c32; }
+        .dot-white { background: #ccc; }
+        .dot-green { background: #00c896; }
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
 
-        /* ===== ABOUT ===== */
-        .about {
-            max-width: 800px;
-            margin: 0 auto;
+        /* ===== ABOUT SECTION ===== */
+        .about-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 120px 24px;
+            background: #000;
+        }
+        .about-title {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 32px;
+            max-width: 800px;
         }
         .about-text {
-            font-size: 16px;
-            color: #888;
-            line-height: 2;
+            font-size: 19px;
+            color: #86868b;
+            max-width: 640px;
+            line-height: 1.8;
         }
 
         /* ===== CONTACT ===== */
-        .contact {
-            max-width: 600px;
-            margin: 0 auto;
+        .contact-section {
+            padding: 120px 24px;
             text-align: center;
+            background: #101010;
         }
-        .contact-email {
+        .contact-title {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+        }
+        .contact-sub {
+            font-size: 17px;
+            color: #86868b;
+            margin-bottom: 40px;
+        }
+        .contact-email-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 16px 32px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 14px;
-            font-size: 16px;
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 17px;
             font-weight: 500;
-            color: #bbb;
+            color: #f5f5f7;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s;
         }
-        .contact-email:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(108,99,255,0.3);
-            color: #fff;
+        .contact-email-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(108,99,255,0.4);
         }
 
         /* ===== FOOTER ===== */
         footer {
-            padding: 40px 24px;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 24px;
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
-        footer p {
-            font-size: 13px;
-            color: #555;
+        .footer-inner {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+        .footer-top {
+            font-size: 12px;
+            color: #6e6e73;
+            line-height: 1.8;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 12px;
+        }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .footer-copy {
+            font-size: 12px;
+            color: #6e6e73;
         }
         .footer-links {
             display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-top: 12px;
+            gap: 20px;
         }
         .footer-links a {
             font-size: 12px;
-            color: #555;
+            color: #6e6e73;
             transition: color 0.3s;
         }
-        .footer-links a:hover { color: #999; }
+        .footer-links a:hover { color: #d2d2d7; }
+
+        /* ===== SCROLL ANIMATION ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            nav { padding: 12px 20px; }
-            .nav-links { display: none; }
-            .app-card, .app-card.reverse {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                direction: ltr;
-                text-align: center;
-            }
-            .app-features { justify-content: center; }
-            .app-icon { width: 120px; height: 120px; border-radius: 28px; }
-            section { padding: 80px 20px; }
-            .lang-toggle { top: 14px; right: 14px; }
+            .nav-inner a:not(.nav-logo-link) { display: none; }
+            .product-icon { width: 140px; height: 140px; border-radius: 32px; }
+            .hero-links { flex-direction: column; gap: 12px; }
+            .product-links { flex-direction: column; gap: 8px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
         }
-
-        /* ===== HIDE LANG ===== */
-        .ja { display: none; }
-        .en { display: none; }
-        body.lang-ja .ja { display: block; }
-        body.lang-ja .en { display: none !important; }
-        body.lang-en .en { display: block; }
-        body.lang-en .ja { display: none !important; }
-        body.lang-ja .ja-inline { display: inline; }
-        body.lang-en .en-inline { display: inline; }
-        body.lang-ja .en-inline { display: none !important; }
-        body.lang-en .ja-inline { display: none !important; }
-        body.lang-ja .ja-flex { display: flex; }
-        body.lang-en .en-flex { display: flex; }
-        body.lang-ja .en-flex { display: none !important; }
-        body.lang-en .ja-flex { display: none !important; }
-        body.lang-ja .ja-grid { display: grid; }
-        body.lang-en .en-grid { display: grid; }
-        body.lang-ja .en-grid { display: none !important; }
-        body.lang-en .ja-grid { display: none !important; }
-        body.lang-ja .ja-inline-flex { display: inline-flex; }
-        body.lang-en .en-inline-flex { display: inline-flex; }
-        body.lang-ja .en-inline-flex { display: none !important; }
-        body.lang-en .ja-inline-flex { display: none !important; }
     </style>
 </head>
 <body class="lang-ja">
@@ -447,232 +448,217 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="nav-logo"><span>ευ</span> ζην</div>
-        <div class="nav-links">
-            <a href="#apps" class="ja">プロダクト</a>
-            <a href="#apps" class="en">Products</a>
+        <div class="nav-inner">
+            <a href="#" class="nav-logo-link"><span class="nav-logo"><span>ευ</span> ζην</span></a>
+            <a href="#hitori" class="ja">HitoriDeDekirumon</a>
+            <a href="#hitori" class="en">HitoriDeDekirumon</a>
+            <a href="#velobar">VeloBar</a>
+            <a href="#conditioning" class="ja">Conditioning Tracker</a>
+            <a href="#conditioning" class="en">Conditioning Tracker</a>
             <a href="#about" class="ja">私たちについて</a>
             <a href="#about" class="en">About</a>
-            <a href="#contact" class="ja">お問い合わせ</a>
-            <a href="#contact" class="en">Contact</a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-badge">
-            <span class="ja">Sports × Technology</span>
-            <span class="en">Sports × Technology</span>
-        </div>
-        <h1>
-            <span class="ja">テクノロジーで<br><span class="gradient-text">アスリートを進化</span>させる</span>
-            <span class="en">Empowering Athletes<br>with <span class="gradient-text">Technology</span></span>
+    <!-- ===== HERO ===== -->
+    <section class="hero-section">
+        <p class="hero-overtitle">
+            <span class="ja">ευ ζην（エフジン）</span>
+            <span class="en">ευ ζην</span>
+        </p>
+        <h1 class="hero-title">
+            <span class="ja">テクノロジーで<br><span class="gradient">アスリートを進化</span>させる。</span>
+            <span class="en">Evolve Athletes<br>with <span class="gradient">Technology.</span></span>
         </h1>
         <p class="hero-sub">
-            <span class="ja">ευ ζην（エフジン）は、スポーツ科学とテクノロジーの融合で、アスリートのパフォーマンスを最大化するアプリを開発しています。</span>
-            <span class="en">ευ ζην develops apps that maximize athletic performance by merging sports science and technology.</span>
+            <span class="ja">スポーツ科学 × テクノロジーの融合。</span>
+            <span class="en">Where Sports Science meets Technology.</span>
         </p>
-        <a href="#apps" class="hero-cta">
-            <span class="ja">プロダクトを見る ↓</span>
-            <span class="en">View Products ↓</span>
-        </a>
-        <div class="scroll-indicator">
-            <div class="scroll-line"></div>
-            <span>SCROLL</span>
-        </div>
-    </section>
-
-    <!-- Apps Section -->
-    <section id="apps">
-        <div class="apps-container">
-            <p class="section-label">Products</p>
-            <h2 class="section-title">
-                <span class="ja">プロダクト</span>
-                <span class="en">Our Products</span>
-            </h2>
-            <p class="section-desc">
-                <span class="ja">トレーニングの質を高めるために設計された3つのアプリケーション。</span>
-                <span class="en">Three applications designed to elevate the quality of your training.</span>
-            </p>
-
-            <!-- App 1: HitoriDeDekirumon -->
-            <div class="app-card" style="--glow-color: rgba(255,140,50,0.4);">
-                <div class="app-visual">
-                    <div class="app-icon-wrapper">
-                        <img src="https://www.genspark.ai/api/files/s/A5wrP48p" alt="HitoriDeDekirumon" class="app-icon">
-                    </div>
-                </div>
-                <div class="app-info">
-                    <div class="app-tag tag-fitness">AI FITNESS</div>
-                    <h3 class="app-name">HitoriDeDekirumon</h3>
-                    <p class="app-name-sub">
-                        <span class="ja">ひとりでデキルもん — AIフォームチェックアプリ</span>
-                        <span class="en">AI-Powered Form Check App</span>
-                    </p>
-                    <p class="app-description">
-                        <span class="ja">カメラで骨格をリアルタイム検出し、12種目のトレーニングフォームをAIが分析。音声フィードバックでひとりでも正しいフォームでトレーニングできます。毎日のプログラム配信、成長グラフ、8言語対応。</span>
-                        <span class="en">Real-time skeleton detection via camera with AI analysis of 12 exercise forms. Voice feedback enables proper form training even when working out alone. Includes daily programs, growth charts, and 8-language support.</span>
-                    </p>
-                    <div class="app-features ja-flex">
-                        <span class="feature-chip">AI骨格検出</span>
-                        <span class="feature-chip">12種目対応</span>
-                        <span class="feature-chip">音声フィードバック</span>
-                        <span class="feature-chip">動画自動保存</span>
-                        <span class="feature-chip">成長グラフ</span>
-                        <span class="feature-chip">8言語対応</span>
-                    </div>
-                    <div class="app-features en-flex">
-                        <span class="feature-chip">AI Skeleton Detection</span>
-                        <span class="feature-chip">12 Exercises</span>
-                        <span class="feature-chip">Voice Feedback</span>
-                        <span class="feature-chip">Auto Video Save</span>
-                        <span class="feature-chip">Growth Charts</span>
-                        <span class="feature-chip">8 Languages</span>
-                    </div>
-                    <div class="coming-soon-badge">
-                        <div class="dot"></div>
-                        <span class="ja">Coming Soon</span>
-                        <span class="en">Coming Soon</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- App 2: VeloBar -->
-            <div class="app-card reverse" style="--glow-color: rgba(255,255,255,0.3);">
-                <div class="app-visual">
-                    <div class="app-icon-wrapper">
-                        <img src="https://www.genspark.ai/api/files/s/20Ujq5D6" alt="VeloBar" class="app-icon">
-                    </div>
-                </div>
-                <div class="app-info">
-                    <div class="app-tag tag-vbt">VBT</div>
-                    <h3 class="app-name">VeloBar</h3>
-                    <p class="app-name-sub">
-                        <span class="ja">バーベル速度計測 — VBTアプリ</span>
-                        <span class="en">Barbell Velocity Tracker — VBT App</span>
-                    </p>
-                    <p class="app-description">
-                        <span class="ja">バーベルやダンベルの挙上速度をカメラで計測するVelocity Based Training（VBT）アプリ。速度データに基づいた科学的なトレーニング管理で、アスリートのパフォーマンスを最適化します。</span>
-                        <span class="en">A Velocity Based Training (VBT) app that measures barbell and dumbbell lifting speed via camera. Optimize athlete performance with science-based training management powered by velocity data.</span>
-                    </p>
-                    <div class="app-features ja-flex">
-                        <span class="feature-chip">速度計測</span>
-                        <span class="feature-chip">カメラベース</span>
-                        <span class="feature-chip">アスリート向け</span>
-                        <span class="feature-chip">VBT対応</span>
-                        <span class="feature-chip">リアルタイム分析</span>
-                    </div>
-                    <div class="app-features en-flex">
-                        <span class="feature-chip">Velocity Tracking</span>
-                        <span class="feature-chip">Camera-Based</span>
-                        <span class="feature-chip">For Athletes</span>
-                        <span class="feature-chip">VBT Support</span>
-                        <span class="feature-chip">Real-time Analysis</span>
-                    </div>
-                    <div class="coming-soon-badge">
-                        <div class="dot"></div>
-                        <span class="ja">Coming Soon</span>
-                        <span class="en">Coming Soon</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- App 3: Conditioning Tracker -->
-            <div class="app-card" style="--glow-color: rgba(0,200,150,0.4);">
-                <div class="app-visual">
-                    <div class="app-icon-wrapper">
-                        <img src="https://www.genspark.ai/api/files/s/4qeb5m0e" alt="Conditioning Tracker" class="app-icon">
-                    </div>
-                </div>
-                <div class="app-info">
-                    <div class="app-tag tag-conditioning">CONDITIONING</div>
-                    <h3 class="app-name">Conditioning Tracker</h3>
-                    <p class="app-name-sub">
-                        <span class="ja">選手・トレーナー・コーチ間の疲労度共有アプリ</span>
-                        <span class="en">Fatigue Sharing App for Athletes, Trainers & Coaches</span>
-                    </p>
-                    <p class="app-description">
-                        <span class="ja">選手の疲労度やコンディションをトレーナー・コーチ間でリアルタイムに共有。バスケットボール選手を対象にLPS（ローカルポジショニングシステム）でパフォーマンスを計測し、データに基づいたコンディショニング管理を実現します。</span>
-                        <span class="en">Share athlete fatigue and conditioning data in real-time between players, trainers, and coaches. Utilizing LPS (Local Positioning System) to measure basketball player performance, enabling data-driven conditioning management.</span>
-                    </p>
-                    <div class="app-features ja-flex">
-                        <span class="feature-chip">疲労度共有</span>
-                        <span class="feature-chip">LPS計測</span>
-                        <span class="feature-chip">バスケットボール</span>
-                        <span class="feature-chip">チーム管理</span>
-                        <span class="feature-chip">データ分析</span>
-                    </div>
-                    <div class="app-features en-flex">
-                        <span class="feature-chip">Fatigue Sharing</span>
-                        <span class="feature-chip">LPS Tracking</span>
-                        <span class="feature-chip">Basketball</span>
-                        <span class="feature-chip">Team Management</span>
-                        <span class="feature-chip">Data Analytics</span>
-                    </div>
-                    <div class="coming-soon-badge">
-                        <div class="dot"></div>
-                        <span class="ja">開発中 — 研究検証フェーズ</span>
-                        <span class="en">In Development — Research Validation Phase</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About -->
-    <section id="about">
-        <div class="about">
-            <p class="section-label">About</p>
-            <h2 class="section-title">
-                <span class="ja">ευ ζην について</span>
-                <span class="en">About ευ ζην</span>
-            </h2>
-            <p class="about-text">
-                <span class="ja">ευ ζην（エフジン）は、ギリシャ語で「良く生きる」を意味します。スポーツ科学とテクノロジーの力で、すべてのアスリートが自分の可能性を最大限に引き出せる世界を目指しています。AIによるフォーム分析、速度計測によるトレーニング最適化、そしてチーム全体のコンディショニング管理 — テクノロジーでトレーニングの常識を変えていきます。</span>
-                <span class="en">ευ ζην — meaning "to live well" in Greek. We aim to create a world where every athlete can maximize their potential through the power of sports science and technology. AI-powered form analysis, velocity-based training optimization, and team-wide conditioning management — we're transforming the way training works through technology.</span>
-            </p>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact">
-        <div class="contact">
-            <p class="section-label">Contact</p>
-            <h2 class="section-title">
-                <span class="ja">お問い合わせ</span>
-                <span class="en">Get in Touch</span>
-            </h2>
-            <p class="section-desc" style="margin: 0 auto 40px;">
-                <span class="ja">アプリに関するご質問やお問い合わせはメールでお気軽にどうぞ。</span>
-                <span class="en">Feel free to reach out with any questions about our apps.</span>
-            </p>
-            <a href="mailto:efujin.team@gmail.com" class="contact-email">
-                ✉ efujin.team@gmail.com
+        <div class="hero-links">
+            <a href="#hitori" class="hero-link">
+                <span class="ja">プロダクトを見る</span>
+                <span class="en">View Products</span>
+                <span class="arrow">›</span>
             </a>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ===== APP 1: HitoriDeDekirumon ===== -->
+    <section class="product-section light" id="hitori">
+        <img src="https://www.genspark.ai/api/files/s/A5wrP48p" alt="HitoriDeDekirumon" class="product-icon reveal">
+        <p class="product-overtitle reveal reveal-delay-1">AI Fitness</p>
+        <h2 class="product-title reveal reveal-delay-1">
+            <span class="ja">HitoriDeDekirumon</span>
+            <span class="en">HitoriDeDekirumon</span>
+        </h2>
+        <p class="product-subtitle reveal reveal-delay-2">
+            <span class="ja">ひとりでも、正しいフォームで。</span>
+            <span class="en">Perfect form, even when training alone.</span>
+        </p>
+        <p class="product-desc reveal reveal-delay-2">
+            <span class="ja">AIがカメラで骨格をリアルタイム検出。12種目のフォームを分析し、音声でフィードバック。ひとりでもジムでも、最高のトレーニングを。</span>
+            <span class="en">AI detects your skeleton in real-time via camera. Analyzes form across 12 exercises with voice feedback. The best training experience, whether alone or at the gym.</span>
+        </p>
+        <div class="product-features reveal reveal-delay-3 ja-flex">
+            <span class="feature-tag">AI骨格検出</span>
+            <span class="feature-tag">12種目</span>
+            <span class="feature-tag">音声フィードバック</span>
+            <span class="feature-tag">動画自動保存</span>
+            <span class="feature-tag">成長グラフ</span>
+            <span class="feature-tag">8言語対応</span>
+        </div>
+        <div class="product-features reveal reveal-delay-3 en-flex">
+            <span class="feature-tag">AI Skeleton Detection</span>
+            <span class="feature-tag">12 Exercises</span>
+            <span class="feature-tag">Voice Feedback</span>
+            <span class="feature-tag">Auto Video Save</span>
+            <span class="feature-tag">Growth Charts</span>
+            <span class="feature-tag">8 Languages</span>
+        </div>
+        <div class="coming-badge reveal reveal-delay-4">
+            <div class="dot dot-orange"></div>
+            <span>Coming Soon</span>
+        </div>
+    </section>
+
+    <!-- ===== APP 2: VeloBar ===== -->
+    <section class="product-section dark" id="velobar">
+        <img src="https://www.genspark.ai/api/files/s/20Ujq5D6" alt="VeloBar" class="product-icon reveal">
+        <p class="product-overtitle reveal reveal-delay-1">Velocity Based Training</p>
+        <h2 class="product-title reveal reveal-delay-1">VeloBar</h2>
+        <p class="product-subtitle reveal reveal-delay-2">
+            <span class="ja">速度で、トレーニングが変わる。</span>
+            <span class="en">Transform training with velocity.</span>
+        </p>
+        <p class="product-desc reveal reveal-delay-2">
+            <span class="ja">バーベルやダンベルの挙上速度をカメラで計測。速度データに基づく科学的なVBTトレーニングで、アスリートのパフォーマンスを最適化。</span>
+            <span class="en">Measure barbell and dumbbell velocity via camera. Optimize athlete performance with science-driven VBT training powered by velocity data.</span>
+        </p>
+        <div class="product-features reveal reveal-delay-3 ja-flex">
+            <span class="feature-tag">速度計測</span>
+            <span class="feature-tag">カメラベース</span>
+            <span class="feature-tag">アスリート向け</span>
+            <span class="feature-tag">VBT対応</span>
+            <span class="feature-tag">リアルタイム分析</span>
+        </div>
+        <div class="product-features reveal reveal-delay-3 en-flex">
+            <span class="feature-tag">Velocity Tracking</span>
+            <span class="feature-tag">Camera-Based</span>
+            <span class="feature-tag">For Athletes</span>
+            <span class="feature-tag">VBT Support</span>
+            <span class="feature-tag">Real-time Analysis</span>
+        </div>
+        <div class="coming-badge reveal reveal-delay-4">
+            <div class="dot dot-white"></div>
+            <span>Coming Soon</span>
+        </div>
+    </section>
+
+    <!-- ===== APP 3: Conditioning Tracker ===== -->
+    <section class="product-section gray" id="conditioning">
+        <img src="https://www.genspark.ai/api/files/s/4qeb5m0e" alt="Conditioning Tracker" class="product-icon reveal">
+        <p class="product-overtitle reveal reveal-delay-1">Team Conditioning</p>
+        <h2 class="product-title reveal reveal-delay-1">
+            <span class="ja">Conditioning<br>Tracker</span>
+            <span class="en">Conditioning<br>Tracker</span>
+        </h2>
+        <p class="product-subtitle reveal reveal-delay-2">
+            <span class="ja">チームの状態を、データで見る。</span>
+            <span class="en">See team condition through data.</span>
+        </p>
+        <p class="product-desc reveal reveal-delay-2">
+            <span class="ja">選手の疲労度をトレーナー・コーチ間でリアルタイム共有。LPSでパフォーマンスを計測し、データに基づいたコンディショニング管理を実現。</span>
+            <span class="en">Share athlete fatigue data between trainers and coaches in real-time. Measure performance with LPS and enable data-driven conditioning management.</span>
+        </p>
+        <div class="product-features reveal reveal-delay-3 ja-flex">
+            <span class="feature-tag">疲労度共有</span>
+            <span class="feature-tag">LPS計測</span>
+            <span class="feature-tag">バスケットボール</span>
+            <span class="feature-tag">チーム管理</span>
+            <span class="feature-tag">データ分析</span>
+        </div>
+        <div class="product-features reveal reveal-delay-3 en-flex">
+            <span class="feature-tag">Fatigue Sharing</span>
+            <span class="feature-tag">LPS Tracking</span>
+            <span class="feature-tag">Basketball</span>
+            <span class="feature-tag">Team Management</span>
+            <span class="feature-tag">Data Analytics</span>
+        </div>
+        <div class="coming-badge reveal reveal-delay-4">
+            <div class="dot dot-green"></div>
+            <span class="ja">開発中 — 研究検証フェーズ</span>
+            <span class="en">In Development — Research Phase</span>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="about-section" id="about">
+        <h2 class="about-title reveal">
+            <span class="ja">「良く生きる」を、<br>すべてのアスリートに。</span>
+            <span class="en">"Live Well" —<br>for every athlete.</span>
+        </h2>
+        <p class="about-text reveal reveal-delay-2">
+            <span class="ja">ευ ζην（エフジン）はギリシャ語で「良く生きる」を意味します。スポーツ科学とテクノロジーの力で、すべてのアスリートが自分の可能性を最大限に引き出せる世界を。AIフォーム分析、速度計測トレーニング、チームコンディショニング管理。テクノロジーで、トレーニングの常識を変えていきます。</span>
+            <span class="en">ευ ζην means "to live well" in Greek. We envision a world where every athlete can maximize their potential through sports science and technology. AI form analysis, velocity-based training, team conditioning management. We're transforming training through technology.</span>
+        </p>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="contact-section" id="contact">
+        <h2 class="contact-title reveal">
+            <span class="ja">お問い合わせ</span>
+            <span class="en">Get in Touch</span>
+        </h2>
+        <p class="contact-sub reveal reveal-delay-1">
+            <span class="ja">アプリに関するご質問はお気軽にどうぞ。</span>
+            <span class="en">Feel free to reach out with any questions.</span>
+        </p>
+        <a href="mailto:efujin.team@gmail.com" class="contact-email-btn reveal reveal-delay-2">
+            ✉&nbsp; efujin.team@gmail.com
+        </a>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
     <footer>
-        <p>&copy; 2025 ευ ζην. All rights reserved.</p>
-        <div class="footer-links">
-            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="ja">プライバシーポリシー</a>
-            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="en">Privacy Policy</a>
-            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/terms.html" class="ja">利用規約</a>
-            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/terms.html" class="en">Terms of Service</a>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <span class="ja">ευ ζην（エフジン）が開発するアプリは、医療機器ではありません。トレーニングの参考情報としてご利用ください。</span>
+                <span class="en">Apps developed by ευ ζην are not medical devices. Please use them as reference information for training.</span>
+            </div>
+            <div class="footer-bottom">
+                <span class="footer-copy">&copy; 2025 ευ ζην. All rights reserved.</span>
+                <div class="footer-links">
+                    <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="ja">プライバシーポリシー</a>
+                    <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="en">Privacy Policy</a>
+                    <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/terms.html" class="ja">利用規約</a>
+                    <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/terms.html" class="en">Terms of Service</a>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <!-- ===== SCROLL REVEAL SCRIPT ===== -->
     <script>
+        // Language
         function setLang(lang) {
             document.body.className = 'lang-' + lang;
             document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
             localStorage.setItem('lang', lang);
         }
-        // Restore saved language
         const saved = localStorage.getItem('lang');
         if (saved) setLang(saved);
+
+        // Scroll reveal (Apple-style)
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+        revealElements.forEach(el => observer.observe(el));
     </script>
 
 </body>
