@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditioning Tracker - ευ ζην</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', 'Noto Sans JP', -apple-system, sans-serif; background: #000; color: #f5f5f7; line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        a { text-decoration: none; color: inherit; }
+        .ja, .en { display: none; }
+        body.lang-ja .ja { display: block; }
+        body.lang-en .en { display: block; }
+        body.lang-ja .en { display: none !important; }
+        body.lang-en .ja { display: none !important; }
+        body.lang-ja .ja-flex { display: flex !important; }
+        body.lang-en .en-flex { display: flex !important; }
+        body.lang-ja .en-flex { display: none !important; }
+        body.lang-en .ja-flex { display: none !important; }
+        .lang-toggle { position: fixed; top: 16px; right: 16px; z-index: 9999; display: flex; gap: 2px; background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 8px; padding: 3px; }
+        .lang-btn { padding: 5px 12px; border: none; border-radius: 6px; background: transparent; color: #888; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .lang-btn.active { background: rgba(255,255,255,0.15); color: #fff; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 9000; height: 48px; background: rgba(0,0,0,0.85); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .nav-logo { font-size: 16px; font-weight: 700; color: #f5f5f7; }
+        .nav-logo span { color: #6c63ff; }
+        .nav-back { font-size: 13px; color: #2997ff; display: flex; align-items: center; gap: 4px; }
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Hero */
+        .detail-hero {
+            min-height: 80vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 120px 24px 80px;
+            background: linear-gradient(180deg, #001a10 0%, #000 100%);
+        }
+        .detail-hero .icon { width: 180px; height: 180px; border-radius: 40px; object-fit: cover; margin-bottom: 32px; box-shadow: 0 30px 80px rgba(0,200,150,0.15); }
+        .detail-hero h1 { font-size: clamp(40px, 7vw, 72px); font-weight: 800; letter-spacing: -2px; margin-bottom: 12px; }
+        .detail-hero .sub { font-size: 24px; color: #00c896; font-weight: 500; margin-bottom: 16px; }
+        .detail-hero .desc { font-size: 17px; color: #86868b; max-width: 520px; line-height: 1.7; }
+
+        /* Feature sections */
+        .feature-section { padding: 100px 24px; text-align: center; }
+        .feature-section.dark { background: #000; }
+        .feature-section.light { background: #f5f5f7; color: #1d1d1f; }
+        .feature-section.gray { background: #0a0a0a; }
+        .feature-section h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .feature-section.light h2 { color: #1d1d1f; }
+        .feature-section p { font-size: 17px; color: #86868b; max-width: 560px; margin: 0 auto 40px; line-height: 1.7; }
+        .feature-section.light p { color: #6e6e73; }
+        .feature-section .screenshot { max-width: 320px; width: 100%; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); margin: 0 auto; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); min-height: 400px; display: flex; align-items: center; justify-content: center; color: #333; font-size: 14px; }
+        .feature-section.light .screenshot { box-shadow: 0 20px 60px rgba(0,0,0,0.1); background: #fff; border: 1px solid rgba(0,0,0,0.06); color: #ccc; }
+        .screenshot img { width: 100%; border-radius: 24px; }
+
+        /* Feature grid */
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .feature-grid-item { padding: 32px 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; text-align: center; }
+        .feature-grid-item.light-card { background: #fff; border: 1px solid rgba(0,0,0,0.06); }
+        .feature-grid-item .ficon { font-size: 36px; margin-bottom: 16px; }
+        .feature-grid-item h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .feature-section.light .feature-grid-item h3 { color: #1d1d1f; }
+        .feature-grid-item p { font-size: 14px; margin: 0; }
+
+        /* Flow diagram */
+        .flow-section { padding: 100px 24px; text-align: center; background: #000; }
+        .flow-section h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .flow-section > p { font-size: 17px; color: #86868b; max-width: 560px; margin: 0 auto 60px; line-height: 1.7; }
+        .flow-grid { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
+        .flow-card { padding: 28px 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; text-align: center; width: 180px; }
+        .flow-card .ficon { font-size: 36px; margin-bottom: 12px; }
+        .flow-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .flow-card p { font-size: 12px; color: #666; margin: 0; }
+        .flow-arrow { font-size: 24px; color: #00c896; }
+
+        /* Research badge */
+        .research-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(0,200,150,0.1);
+            border: 1px solid rgba(0,200,150,0.2);
+            color: #00c896;
+            margin-top: 40px;
+        }
+        .research-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #00c896; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+        /* CTA */
+        .cta-section { padding: 100px 24px; text-align: center; background: #101010; }
+        .cta-section h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .cta-section p { font-size: 17px; color: #86868b; margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+        .cta-badge { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; background: linear-gradient(135deg, #00c896, #009973); color: #fff; transition: transform 0.3s, box-shadow 0.3s; }
+        .cta-badge:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,200,150,0.3); }
+
+        footer { padding: 20px 24px; background: #000; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        footer p { font-size: 12px; color: #6e6e73; }
+        footer a { color: #6e6e73; margin: 0 10px; font-size: 12px; transition: color 0.3s; }
+        footer a:hover { color: #d2d2d7; }
+
+        @media (max-width: 768px) {
+            .feature-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .detail-hero .icon { width: 130px; height: 130px; border-radius: 30px; }
+            .flow-grid { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+            .flow-card { width: 100%; max-width: 300px; }
+        }
+    </style>
+</head>
+<body class="lang-ja">
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja')" id="btn-ja">JP</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+    </div>
+    <nav>
+        <a href="index.html" class="nav-logo"><span>ευ</span> ζην</a>
+        <a href="index.html" class="nav-back">
+            <span class="ja">← トップに戻る</span>
+            <span class="en">← Back to Top</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="detail-hero">
+        <img src="icon-conditioning.png" alt="Conditioning Tracker" class="icon reveal">
+        <h1 class="reveal reveal-delay-1">Conditioning<br>Tracker</h1>
+        <p class="sub reveal reveal-delay-1">
+            <span class="ja">選手・トレーナー・コーチ間の疲労度共有アプリ</span>
+            <span class="en">Fatigue Sharing for Athletes, Trainers & Coaches</span>
+        </p>
+        <p class="desc reveal reveal-delay-2">
+            <span class="ja">選手のコンディションをリアルタイムでチーム全体に共有。データに基づいた判断で、パフォーマンスを最大化し、怪我のリスクを最小化します。</span>
+            <span class="en">Share athlete conditioning data across the entire team in real-time. Data-driven decisions maximize performance and minimize injury risk.</span>
+        </p>
+    </section>
+
+    <!-- Feature 1: Team Sharing -->
+    <section class="feature-section light">
+        <h2 class="reveal">
+            <span class="ja">チーム全体で、状態を把握。</span>
+            <span class="en">Understand team condition.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">選手が入力した疲労度・体調・メンタルの状態を、トレーナーとコーチがリアルタイムでダッシュボードから確認。一人ひとりの状態を見逃しません。</span>
+            <span class="en">Trainers and coaches view athlete-reported fatigue, physical condition, and mental state in real-time on a dashboard. Never miss an individual's condition.</span>
+        </p>
+        <div class="screenshot reveal reveal-delay-2">
+            <img src="ss-conditioning-dashboard.png" alt="Dashboard" onerror="this.style.display='none'; this.parentElement.innerHTML='スクリーンショット（準備中）';">
+        </div>
+    </section>
+
+    <!-- Feature 2: Data Input -->
+    <section class="feature-section dark">
+        <h2 class="reveal">
+            <span class="ja">選手の入力は、30秒で完了。</span>
+            <span class="en">Athletes report in 30 seconds.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">シンプルなUIで、選手の負担を最小限に。毎日の入力が習慣になるよう設計しました。疲労度、睡眠の質、筋肉痛、メンタルの状態をスライダーで簡単入力。</span>
+            <span class="en">Simple UI minimizes athlete burden. Designed to make daily input a habit. Easily report fatigue, sleep quality, muscle soreness, and mental state with sliders.</span>
+        </p>
+        <div class="feature-grid reveal reveal-delay-2">
+            <div class="feature-grid-item">
+                <div class="ficon">😴</div>
+                <h3 class="ja">睡眠の質</h3>
+                <h3 class="en">Sleep Quality</h3>
+                <p class="ja">睡眠時間と質を5段階で評価。</p>
+                <p class="en">Rate sleep duration and quality on 5 levels.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">🦵</div>
+                <h3 class="ja">筋肉痛</h3>
+                <h3 class="en">Muscle Soreness</h3>
+                <p class="ja">部位別の痛みレベルを記録。</p>
+                <p class="en">Record pain levels by body region.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">🧠</div>
+                <h3 class="ja">メンタル状態</h3>
+                <h3 class="en">Mental State</h3>
+                <p class="ja">ストレス・モチベーションを可視化。</p>
+                <p class="en">Visualize stress and motivation.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">💪</div>
+                <h3 class="ja">主観的疲労度</h3>
+                <h3 class="en">Subjective Fatigue</h3>
+                <p class="ja">RPEベースの疲労度スケール。</p>
+                <p class="en">RPE-based fatigue scale.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">❤️</div>
+                <h3 class="ja">体調</h3>
+                <h3 class="en">Physical Condition</h3>
+                <p class="ja">全体的な体調を毎日トラッキング。</p>
+                <p class="en">Track overall physical condition daily.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">📝</div>
+                <h3 class="ja">メモ</h3>
+                <h3 class="en">Notes</h3>
+                <p class="ja">数値では表せない情報を自由記述。</p>
+                <p class="en">Free text for information beyond numbers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature 3: Flow -->
+    <section class="flow-section">
+        <h2 class="reveal">
+            <span class="ja">情報の流れ。</span>
+            <span class="en">Information flow.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">選手からトレーナーへ、トレーナーからコーチへ。シームレスにデータが流れます。</span>
+            <span class="en">From athlete to trainer, trainer to coach. Data flows seamlessly.</span>
+        </p>
+        <div class="flow-grid reveal reveal-delay-2">
+            <div class="flow-card">
+                <div class="ficon">🏃</div>
+                <h3 class="ja">選手</h3>
+                <h3 class="en">Athlete</h3>
+                <p class="ja">毎日の疲労度を入力</p>
+                <p class="en">Daily fatigue input</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-card">
+                <div class="ficon">🩺</div>
+                <h3 class="ja">トレーナー</h3>
+                <h3 class="en">Trainer</h3>
+                <p class="ja">データを分析・判断</p>
+                <p class="en">Analyze & assess data</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-card">
+                <div class="ficon">📋</div>
+                <h3 class="ja">コーチ</h3>
+                <h3 class="en">Coach</h3>
+                <p class="ja">練習メニューに反映</p>
+                <p class="en">Reflect in training plans</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature 4: LPS Research -->
+    <section class="feature-section light">
+        <h2 class="reveal">
+            <span class="ja">LPSで、客観的に検証。</span>
+            <span class="en">Validated with LPS data.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">バスケットボール選手を対象に、LPS（ローカルポジショニングシステム）で計測したパフォーマンスデータと疲労度の相関を研究中。主観的データと客観的データの融合で、信頼性の高いコンディショニング管理を目指します。</span>
+            <span class="en">Researching correlations between LPS-measured performance data and fatigue levels in basketball players. Combining subjective and objective data for reliable conditioning management.</span>
+        </p>
+        <div class="feature-grid reveal reveal-delay-2">
+            <div class="feature-grid-item light-card">
+                <div class="ficon">📡</div>
+                <h3>LPS</h3>
+                <p class="ja">ローカルポジショニングシステムで選手の動きを高精度に計測。</p>
+                <p class="en">High-precision athlete tracking with Local Positioning System.</p>
+            </div>
+            <div class="feature-grid-item light-card">
+                <div class="ficon">🏀</div>
+                <h3 class="ja">バスケットボール</h3>
+                <h3 class="en">Basketball</h3>
+                <p class="ja">走行距離、スプリント回数、加速度をリアルタイム計測。</p>
+                <p class="en">Real-time measurement of distance, sprint count, and acceleration.</p>
+            </div>
+            <div class="feature-grid-item light-card">
+                <div class="ficon">🔬</div>
+                <h3 class="ja">研究検証</h3>
+                <h3 class="en">Research</h3>
+                <p class="ja">主観的疲労度と客観的パフォーマンスの相関を分析。</p>
+                <p class="en">Analyzing correlation between subjective fatigue and objective performance.</p>
+            </div>
+        </div>
+        <div class="research-badge reveal reveal-delay-3">
+            <div class="dot"></div>
+            <span class="ja">現在、バスケットボール選手を対象に検証フェーズ中</span>
+            <span class="en">Currently in research validation phase with basketball players</span>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2 class="reveal">
+            <span class="ja">チームの力を、最大限に。</span>
+            <span class="en">Maximize team potential.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">研究検証を経て、チームスポーツ・個人競技の両方に対応したアプリとしてリリース予定です。</span>
+            <span class="en">After research validation, we plan to release an app supporting both team and individual sports.</span>
+        </p>
+        <div class="reveal reveal-delay-2">
+            <div class="cta-badge">
+                <span class="ja">開発中</span>
+                <span class="en">In Development</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 ευ ζην. All rights reserved.</p>
+        <div>
+            <a href="index.html" class="ja">トップ</a>
+            <a href="index.html" class="en">Home</a>
+            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="ja">プライバシーポリシー</a>
+            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="en">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        function setLang(lang) { document.body.className='lang-'+lang; document.getElementById('btn-ja').classList.toggle('active',lang==='ja'); document.getElementById('btn-en').classList.toggle('active',lang==='en'); localStorage.setItem('lang',lang); }
+        const saved=localStorage.getItem('lang'); if(saved) setLang(saved);
+        const revealElements=document.querySelectorAll('.reveal');
+        const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');}});},{threshold:0.15,rootMargin:'0px 0px -60px 0px'});
+        revealElements.forEach(el=>observer.observe(el));
+    </script>
+</body>
+</html>
