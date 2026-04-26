@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeloBar - ευ ζην</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', 'Noto Sans JP', -apple-system, sans-serif; background: #000; color: #f5f5f7; line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        a { text-decoration: none; color: inherit; }
+        .ja, .en { display: none; }
+        body.lang-ja .ja { display: block; }
+        body.lang-en .en { display: block; }
+        body.lang-ja .en { display: none !important; }
+        body.lang-en .ja { display: none !important; }
+        body.lang-ja .ja-flex { display: flex !important; }
+        body.lang-en .en-flex { display: flex !important; }
+        body.lang-ja .en-flex { display: none !important; }
+        body.lang-en .ja-flex { display: none !important; }
+        .lang-toggle { position: fixed; top: 16px; right: 16px; z-index: 9999; display: flex; gap: 2px; background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 8px; padding: 3px; }
+        .lang-btn { padding: 5px 12px; border: none; border-radius: 6px; background: transparent; color: #888; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .lang-btn.active { background: rgba(255,255,255,0.15); color: #fff; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 9000; height: 48px; background: rgba(0,0,0,0.85); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .nav-logo { font-size: 16px; font-weight: 700; color: #f5f5f7; }
+        .nav-logo span { color: #6c63ff; }
+        .nav-back { font-size: 13px; color: #2997ff; display: flex; align-items: center; gap: 4px; }
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Hero */
+        .detail-hero {
+            min-height: 80vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 120px 24px 80px;
+            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+        }
+        .detail-hero .icon { width: 180px; height: 180px; border-radius: 40px; object-fit: cover; margin-bottom: 32px; box-shadow: 0 30px 80px rgba(255,255,255,0.08); }
+        .detail-hero h1 { font-size: clamp(40px, 7vw, 72px); font-weight: 800; letter-spacing: -2px; margin-bottom: 12px; }
+        .detail-hero .sub { font-size: 24px; color: #ccc; font-weight: 500; margin-bottom: 16px; }
+        .detail-hero .desc { font-size: 17px; color: #86868b; max-width: 520px; line-height: 1.7; }
+
+        /* Feature sections */
+        .feature-section { padding: 100px 24px; text-align: center; }
+        .feature-section.dark { background: #000; }
+        .feature-section.light { background: #f5f5f7; color: #1d1d1f; }
+        .feature-section.gray { background: #0a0a0a; }
+        .feature-section h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .feature-section.light h2 { color: #1d1d1f; }
+        .feature-section p { font-size: 17px; color: #86868b; max-width: 560px; margin: 0 auto 40px; line-height: 1.7; }
+        .feature-section.light p { color: #6e6e73; }
+        .feature-section .screenshot { max-width: 320px; width: 100%; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); margin: 0 auto; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); min-height: 400px; display: flex; align-items: center; justify-content: center; color: #333; font-size: 14px; }
+        .feature-section.light .screenshot { box-shadow: 0 20px 60px rgba(0,0,0,0.1); background: #fff; border: 1px solid rgba(0,0,0,0.06); color: #ccc; }
+        .screenshot img { width: 100%; border-radius: 24px; }
+
+        /* Feature grid */
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .feature-grid-item { padding: 32px 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; text-align: center; }
+        .feature-grid-item.light-card { background: #fff; border: 1px solid rgba(0,0,0,0.06); }
+        .feature-grid-item .ficon { font-size: 36px; margin-bottom: 16px; }
+        .feature-grid-item h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .feature-section.light .feature-grid-item h3 { color: #1d1d1f; }
+        .feature-grid-item p { font-size: 14px; margin: 0; }
+
+        /* Speed display */
+        .speed-display { max-width: 600px; margin: 0 auto 40px; padding: 40px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; }
+        .speed-number { font-size: clamp(60px, 10vw, 100px); font-weight: 900; letter-spacing: -3px; background: linear-gradient(90deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .speed-unit { font-size: 24px; color: #666; font-weight: 500; }
+        .speed-label { font-size: 14px; color: #555; margin-top: 8px; }
+
+        /* CTA */
+        .cta-section { padding: 100px 24px; text-align: center; background: #000; }
+        .cta-section h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .cta-section p { font-size: 17px; color: #86868b; margin-bottom: 32px; }
+        .cta-badge { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; background: linear-gradient(135deg, #444, #222); color: #fff; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s, box-shadow 0.3s; }
+        .cta-badge:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,255,255,0.1); }
+        .store-badges { display: flex; gap: 16px; justify-content: center; margin-top: 24px; }
+        .store-badge { padding: 12px 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-size: 14px; color: #999; }
+
+        footer { padding: 20px 24px; background: #000; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        footer p { font-size: 12px; color: #6e6e73; }
+        footer a { color: #6e6e73; margin: 0 10px; font-size: 12px; transition: color 0.3s; }
+        footer a:hover { color: #d2d2d7; }
+
+        @media (max-width: 768px) {
+            .feature-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .detail-hero .icon { width: 130px; height: 130px; border-radius: 30px; }
+        }
+    </style>
+</head>
+<body class="lang-ja">
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja')" id="btn-ja">JP</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+    </div>
+    <nav>
+        <a href="index.html" class="nav-logo"><span>ευ</span> ζην</a>
+        <a href="index.html" class="nav-back">
+            <span class="ja">← トップに戻る</span>
+            <span class="en">← Back to Top</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="detail-hero">
+        <img src="icon-velobar.png" alt="VeloBar" class="icon reveal">
+        <h1 class="reveal reveal-delay-1">VeloBar</h1>
+        <p class="sub reveal reveal-delay-1">
+            <span class="ja">Velocity Based Training アプリ</span>
+            <span class="en">Velocity Based Training App</span>
+        </p>
+        <p class="desc reveal reveal-delay-2">
+            <span class="ja">カメラでバーベルの速度を計測。科学的データに基づくVBTトレーニングで、あなたのパフォーマンスを最大化します。外部デバイス不要 — iPhoneだけで完結。</span>
+            <span class="en">Measure barbell velocity with your camera. Maximize performance with science-driven VBT training. No external devices needed — just your iPhone.</span>
+        </p>
+    </section>
+
+    <!-- Feature 1: Velocity -->
+    <section class="feature-section dark">
+        <h2 class="reveal">
+            <span class="ja">速度が、すべてを語る。</span>
+            <span class="en">Velocity tells everything.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">バーベルの挙上速度は、あなたの疲労度・最大筋力・最適負荷を教えてくれます。感覚ではなく、データでトレーニングを管理する時代へ。</span>
+            <span class="en">Barbell velocity reveals your fatigue level, max strength, and optimal load. Move from guesswork to data-driven training.</span>
+        </p>
+        <div class="speed-display reveal reveal-delay-2">
+            <div class="speed-number">0.75</div>
+            <div class="speed-unit">m/s</div>
+            <div class="speed-label">
+                <span class="ja">平均挙上速度（Mean Velocity）</span>
+                <span class="en">Mean Concentric Velocity</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature 2: Camera Based -->
+    <section class="feature-section light">
+        <h2 class="reveal">
+            <span class="ja">カメラだけで、計測。</span>
+            <span class="en">Measure with just a camera.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">高価なリニアポジショントランスデューサーは不要。iPhoneのカメラとコンピュータビジョン技術で、バーベルの軌跡と速度を高精度に計測します。</span>
+            <span class="en">No expensive linear position transducers needed. iPhone camera and computer vision technology measure barbell trajectory and velocity with high precision.</span>
+        </p>
+        <div class="screenshot reveal reveal-delay-2">
+            <img src="ss-velobar-camera.png" alt="Camera Tracking" onerror="this.style.display='none'; this.parentElement.innerHTML='スクリーンショット（準備中）';">
+        </div>
+    </section>
+
+    <!-- Feature 3: For Athletes -->
+    <section class="feature-section dark">
+        <h2 class="reveal">
+            <span class="ja">アスリートのために設計。</span>
+            <span class="en">Designed for athletes.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">VBTの知見を持つスポーツ科学者とアスリートが共同開発。実際の現場で求められる機能を、シンプルなUIに凝縮しました。</span>
+            <span class="en">Co-developed by sports scientists and athletes with VBT expertise. Features demanded in real training environments, packed into a simple UI.</span>
+        </p>
+        <div class="feature-grid reveal reveal-delay-2">
+            <div class="feature-grid-item">
+                <div class="ficon">📊</div>
+                <h3 class="ja">速度プロファイル</h3>
+                <h3 class="en">Velocity Profile</h3>
+                <p class="ja">Load-Velocityプロファイルで1RMを推定。</p>
+                <p class="en">Estimate 1RM with Load-Velocity profiling.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">⚡</div>
+                <h3 class="ja">疲労検知</h3>
+                <h3 class="en">Fatigue Detection</h3>
+                <p class="ja">速度低下から疲労をリアルタイムで検知。</p>
+                <p class="en">Detect fatigue in real-time from velocity loss.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">🎯</div>
+                <h3 class="ja">負荷最適化</h3>
+                <h3 class="en">Load Optimization</h3>
+                <p class="ja">目標速度に基づいた最適な負荷を提案。</p>
+                <p class="en">Suggest optimal load based on target velocity.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">📈</div>
+                <h3 class="ja">トレンド分析</h3>
+                <h3 class="en">Trend Analysis</h3>
+                <p class="ja">長期的な速度・パワーの推移を追跡。</p>
+                <p class="en">Track long-term velocity and power trends.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">🏋️</div>
+                <h3 class="ja">多種目対応</h3>
+                <h3 class="en">Multi-Exercise</h3>
+                <p class="ja">スクワット、ベンチプレス、デッドリフトなど対応。</p>
+                <p class="en">Supports squat, bench press, deadlift, and more.</p>
+            </div>
+            <div class="feature-grid-item">
+                <div class="ficon">📱</div>
+                <h3 class="ja">シンプルUI</h3>
+                <h3 class="en">Simple UI</h3>
+                <p class="ja">セット間でもすぐに確認できるシンプル設計。</p>
+                <p class="en">Simple design for quick checks between sets.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2 class="reveal">
+            <span class="ja">VBTを、すべてのアスリートに。</span>
+            <span class="en">VBT for every athlete.</span>
+        </h2>
+        <p class="reveal reveal-delay-1">
+            <span class="ja">App Storeでの公開に向けて準備中です。</span>
+            <span class="en">Preparing for App Store launch.</span>
+        </p>
+        <div class="reveal reveal-delay-2">
+            <div class="cta-badge">
+                <span class="ja">Coming Soon</span>
+                <span class="en">Coming Soon</span>
+            </div>
+            <div class="store-badges">
+                <div class="store-badge">
+                    <span class="ja">🍎 App Store — 準備中</span>
+                    <span class="en">🍎 App Store — Coming Soon</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 ευ ζην. All rights reserved.</p>
+        <div>
+            <a href="index.html" class="ja">トップ</a>
+            <a href="index.html" class="en">Home</a>
+            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="ja">プライバシーポリシー</a>
+            <a href="https://oharayuki0709-sudo.github.io/hitori-de-dekirumon-privacy/" class="en">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        function setLang(lang) { document.body.className='lang-'+lang; document.getElementById('btn-ja').classList.toggle('active',lang==='ja'); document.getElementById('btn-en').classList.toggle('active',lang==='en'); localStorage.setItem('lang',lang); }
+        const saved=localStorage.getItem('lang'); if(saved) setLang(saved);
+        const revealElements=document.querySelectorAll('.reveal');
+        const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');}});},{threshold:0.15,rootMargin:'0px 0px -60px 0px'});
+        revealElements.forEach(el=>observer.observe(el));
+    </script>
+</body>
+</html>
